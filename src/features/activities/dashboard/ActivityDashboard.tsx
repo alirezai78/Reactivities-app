@@ -3,21 +3,20 @@ import { Activity } from "../../../app/models/activity";
 import ActivityList from "./ActivityList";
 import ActivityDetails from "../details/ActivityDetails";
 import ActivityForm from "../form/ActivityForm";
+import { useStore } from "../../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
 interface Props {
     activities: Activity[];
-    selectedActivity: Activity | undefined,
-    selectActivity: (id: string) => void,
-    cancelSelecActivity: () => void,
-    editMode: boolean,
-    openForm: (id?: string) => void,
-    closeForm: () => void,
     createOrEditActivity: (activity: Activity) => void;
     deleteActivity: (id: string) => void;
     submitting: boolean;
 }
 
-export default function ActivityDashboard(props: Props) {
+export default observer(function ActivityDashboard(props: Props) {
+
+    const { activityStore } = useStore();
+
     return (
 
         <Grid>
@@ -25,24 +24,17 @@ export default function ActivityDashboard(props: Props) {
                 <List>
                     <ActivityList
                         activities={props.activities}
-                        selectActivity={props.selectActivity}
                         deleteActivity={props.deleteActivity}
                         submitting={props.submitting}
                     />
                 </List>
             </Grid.Column>
             <Grid.Column width='6'>
-                {props.selectedActivity && !props.editMode &&
+                {activityStore.selectedActivtiy && !activityStore.editMode &&
 
-                    <ActivityDetails
-                        activity={props.selectedActivity}
-                        cancelSelecActivity={props.cancelSelecActivity}
-                        openForm={props.openForm}
-                    />}
+                    <ActivityDetails />}
                 {
-                    props.editMode && <ActivityForm
-                        closeForm={props.closeForm}
-                        selectedActivity={props.selectedActivity}
+                    activityStore.editMode && <ActivityForm
                         createOrEditActivity={props.createOrEditActivity}
                         submitting={props.submitting}
                     />
@@ -51,4 +43,4 @@ export default function ActivityDashboard(props: Props) {
         </Grid>
 
     )
-}
+});

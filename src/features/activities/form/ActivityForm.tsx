@@ -1,17 +1,18 @@
 import { Button, Form, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import { ChangeEvent, useState } from "react";
+import { useStore } from "../../../app/stores/store";
 
 interface Props {
-    selectedActivity: Activity | undefined;
-    closeForm: () => void;
     createOrEditActivity: (activity: Activity) => void;
     submitting: boolean;
 }
 
 export default function ActivityForm(props: Props) {
 
-    const initialState = props.selectedActivity ?? {
+    const { activityStore } = useStore();
+
+    const initialState = activityStore.selectedActivtiy ?? {
         id: '',
         title: '',
         category: '',
@@ -42,7 +43,7 @@ export default function ActivityForm(props: Props) {
                 <Form.Input placeholder="City" name='city' value={activity.city} onChange={handleInputChange} />
                 <Form.Input placeholder="Venue" name='venue' value={activity.venue} onChange={handleInputChange} />
                 <Button loading={props.submitting} floated="right" positive type="submit" content="Submit" />
-                <Button onClick={props.closeForm} floated="right" positive type="button" content="Cancel" />
+                <Button onClick={()=>{activityStore.closeForm()}} floated="right" positive type="button" content="Cancel" />
             </Form>
         </Segment>
     )
