@@ -4,7 +4,6 @@ import { ChangeEvent, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 
 interface Props {
-    createOrEditActivity: (activity: Activity) => void;
     submitting: boolean;
 }
 
@@ -25,7 +24,7 @@ export default function ActivityForm(props: Props) {
     const [activity, setActivity] = useState(initialState);
 
     function handleFormSubmit() {
-        props.createOrEditActivity(activity);
+        activity.id?activityStore.updateActivity(activity):activityStore.createActivity(activity);
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
